@@ -1,0 +1,10 @@
+<div>
+    <div style='margin:10px'>
+        <button nz-button nzType="primary" (click)='flyToPoint()'>飞到坐标点</button>
+        <button nz-button nzType="primary" (click)='getViewerPosition()'>打印当前viewer视角</button>
+        <button nz-button nzType="primary" (click)='flyToEntity()'>飞到实体</button>
+        <button nz-button nzType="primary" (click)='flyAtoB()'>从A飞到B</button>
+        <button nz-button nzType="primary" (click)='lookPoint()'>绕点运行</button>
+    </div>
+    <app-init-cesium (mapLoaded) ='mapLoaded($event)'></app-init-cesium>
+</div>

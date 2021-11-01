@@ -1,0 +1,15 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-10-12 17:29:25
+ * @LastEditTime: 2021-10-12 17:34:10
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \ngcesium\src\app\pages\welcome\pages\add-entity\add-entity.component.html
+-->
+<div>
+    <div style='margin:10px'>
+        <button nz-button nzType="primary" (click)="addZX()">添加折线</button>
+        <button nz-button nzType="primary" (click)="updatepolyLine()">修改材质</button>
+    </div>
+    <app-init-cesium (mapLoaded) ='mapLoaded($event)'></app-init-cesium>
+</div>
