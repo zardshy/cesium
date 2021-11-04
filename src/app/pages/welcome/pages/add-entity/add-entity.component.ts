@@ -1,13 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2021-10-12 17:29:25
- * @LastEditTime: 2021-10-12 17:47:27
+ * @LastEditTime: 2021-11-05 00:00:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ngcesium\src\app\pages\welcome\pages\add-entity\add-entity.component.ts
  */
 import { Component, OnInit } from '@angular/core';
 declare var Cesium:any;
+import { createMarkerLayer } from '../../func/addMarker'
 
 @Component({
   selector: 'app-add-entity',
@@ -25,18 +26,18 @@ export class AddEntityComponent implements OnInit {
   mapLoaded(e){
     this.viewer = e;
     // 拾取实体
-    const handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
-    handler.setInputAction((movement)=>{
-      const picked = this.viewer.scene.pick(movement.position);
-      console.log(picked)
-      if(picked){
-        const entity = Cesium.defaultValue(picked.id, picked.primitive.id);
-        if (entity instanceof Cesium.Entity) {
-          console.log(entity)
-          return entity;
-        }
-      }
-    },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+    // const handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
+    // handler.setInputAction((movement)=>{
+    //   const picked = this.viewer.scene.pick(movement.position);
+    //   console.log(picked)
+    //   if(picked){
+    //     const entity = Cesium.defaultValue(picked.id, picked.primitive.id);
+    //     if (entity instanceof Cesium.Entity) {
+    //       console.log(entity)
+    //       return entity;
+    //     }
+    //   }
+    // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
   }
 
 
@@ -196,41 +197,21 @@ export class AddEntityComponent implements OnInit {
   }
 
   addPoint(){
-    var citizensBankPark = this.viewer.entities.add({
-      name : 'Citizens Bank Park',
-      position : Cesium.Cartesian3.fromDegrees(-75.166493, 39.9060534),
-      point : {
-          pixelSize : 5,
-          color : Cesium.Color.RED,
-          outlineColor : Cesium.Color.WHITE,
-          outlineWidth : 2
-      },
-      label : {
-          text : 'Citizens Bank Park',
-          font : '14pt monospace',
-          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-          outlineWidth : 2,
-          verticalOrigin : Cesium.VerticalOrigin.BOTTOM,
-          pixelOffset : new Cesium.Cartesian2(0, -9)
-      }
-    });
-    var citizensBankPark = this.viewer.entities.add({
-      position : Cesium.Cartesian3.fromDegrees(-75.666493, 39.9060534),
-      billboard : {
-        image : 'assets/IMG/aa.jpg',
-        width : 31,
-        height : 31
-      },
-      label : {
-        text : 'Citizens Bank Park',
-        font : '14pt monospace',
-        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-        outlineWidth : 2,
-        verticalOrigin : Cesium.VerticalOrigin.TOP,
-        pixelOffset : new Cesium.Cartesian2(0, 32)
-      }
-    });
-    this.viewer.zoomTo(this.viewer.entities);
+    let dataArr = [
+      { lng:121.1,lat:31.1,alt:10,name:'zard1' },
+      { lng:121.13,lat:31.13,alt:0,name:'zard2' }
+    ]
+
+    let billBoardConfig = {
+      width: 30,
+      height: 50,
+      image: 'assets/IMG/aa.jpg',
+      DDC_start:0,
+      DDC_end:200000
+    }
+    createMarkerLayer(this.viewer,{dataArr,layerId:'markerlayer',isLabel:true,isBillBoard:true,billBoardConfig,isPoint:false});
+      //this.viewer.dataSources.remove(this.viewer.dataSources.getByName('markerlayer')[0]); // 删除单个数据集
+      // this.viewer.dataSources.removeAll() // 删除所有数据集
   }
 
 
