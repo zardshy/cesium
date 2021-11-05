@@ -68,22 +68,41 @@ export class AddGltfComponent implements OnInit {
       id:'zard',
       position : position,
       orientation : orientation,
+      label : {
+        text : '测试名称\n 123',
+        // font : '14pt Source Han Sans CN',
+        font : '14pt monospace',
+        fillColor:new Cesium.Color.fromCssColorString("rgba(255, 255, 255,1)"),   //字体颜色
+        scale: 0.8,
+        backgroundColor: new Cesium.Color.fromCssColorString("rgba(28, 28, 28, 1)"),    //背景颜色
+        backgroundPadding:new Cesium.Cartesian2(20,10) ,
+        showBackground: true,                //是否显示背景颜色
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,        //label样式
+        outlineWidth : 2,                    
+        verticalOrigin : Cesium.VerticalOrigin.TOP,//垂直位置
+        // horizontalOrigin :Cesium.HorizontalOrigin.LEFT,//水平位置
+        // pixelOffset: Cesium.Cartesian2.ZERO,        
+        // eyeOffset: Cesium.Cartesian3.ZERO,
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        eyeOffset: new Cesium.Cartesian3(0, 120,0),
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 2000),
+      },
       point: {
         pixelSize: 10,
         color: Cesium.Color.YELLOW,
-        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(6000, 2000000000),
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(8000, 2000000000),
       },
       billboard : {
         image : 'assets/IMG/aa.jpg',
         width : 31,
         height : 31,
-        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(2000,6000)
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(4000,8000)
       },
       model : {
           // color: new Cesium.Color(0 ,224 ,0,0.001),
           uri : 'assets/models/gltf/Car1120.gltf',
           scale : 50,
-          distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 2000)
+          distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 4000)
       }
     })
     this.viewer.zoomTo(entity);
