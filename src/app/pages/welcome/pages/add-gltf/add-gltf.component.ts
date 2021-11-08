@@ -225,14 +225,39 @@ export class AddGltfComponent implements OnInit {
     //     "alignedAxis" : new Cesium.VelocityVectorProperty(property, true)
     // }
     // model.viewFrom = new Cesium.Cartesian3.fromDegrees(121.1,31.1,100)
-    this.viewer.trackedEntity = model;
-    // var center = model.position.getValue(model.clock.currentTime);
 
-    var preUpdateHandler = this.viewer.scene.preUpdate.addEventListener( ()=> {
-      if (model) {
-
+    function handeFollowCb(e) {
+       function getModelMatrix(entity, time, result){
+        let matrix3Scratch = new Cesium.Matrix3()
+        let positionScratch = new Cesium.Cartesian3()
+        let orientationScratch = new Cesium.Quaternion()
+        let position = Cesium.Property.getValueOrUndefined(entity.position, time, positionScratch)
+        if (!Cesium.defined(position)) {
+          return undefined
+        }
+        let orientation = Cesium.Property.getValueOrUndefined(entity.orientation, time, orientationScratch)
+        if (!Cesium.defined(orientation)) {
+          result = Cesium.Transforms.eastNorthUpToFixedFrame(position, undefined, result)
+        } else {
+          result = Cesium.Matrix4.fromRotationTranslation(Cesium.Matrix3.fromQuaternion(orientation, matrix3Scratch), position, result)
+        }
+        return result
       }
-  });
+      let scratch = new Cesium.Matrix4()
+      getModelMatrix(model, this.viewer.clock.currentTime, scratch)
+      console.log(scratch)
+      this.viewer.scene.camera.lookAtTransform(scratch, new Cesium.Cartesian3(-50, 0, 10))
+    }
+
+    this.viewer.scene.preRender.addEventListener(handeFollowCb, this)
+
+    this.viewer.trackedEntity = model;
+
+    // var preUpdateHandler = this.viewer.scene.preUpdate.addEventListener( ()=> {
+    //   if (model) {
+
+    //   }
+    // });
 
 
   }

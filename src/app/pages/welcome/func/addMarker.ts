@@ -9,11 +9,17 @@
 declare var Cesium:any;
 
 export function createMarkerLayer(viewer,options){
-    const { dataArr,layerId,isLabel,isBillBoard,billBoardConfig,isPoint} = options;
+    const { dataArr,layerId,fieldNameId,isLabel,isBillBoard,billBoardConfig,isPoint,isZoomTo} = options;
     const layer = new Cesium.CustomDataSource(layerId);
-    viewer.dataSources.add(layer);
-    dataArr.forEach((element,index) => {    
-        const entitiesId =  element.name;
+    dataArr.forEach((element,index) => {   
+        const attr: any = {};
+        for (let key in element){
+            if (Object.hasOwnProperty.call(element,key)){
+                attr[key] = element[key]
+            }
+        };
+        attr.layerId = layerId;
+        const entitiesId =  element[fieldNameId] || index;
         const position = Cesium.Cartesian3.fromDegrees(element.lng,element.lat,element.alt || 0);
         const label = {
             show: isLabel,
@@ -23,7 +29,7 @@ export function createMarkerLayer(viewer,options){
             outlineWidth : 2,
             verticalOrigin : Cesium.VerticalOrigin.BASELINE   ,  // 垂直位置
             horizontalOrigin :Cesium.HorizontalOrigin.CENTER,// 水平位置 RIGHT  CENTER  LEFT 
-            pixelOffset : new Cesium.Cartesian2(0, -Number(billBoardConfig.height)+10)
+            pixelOffset : new Cesium.Cartesian2(0, -Number(billBoardConfig ? billBoardConfig.height : -10)+10)
             // eyeOffset :new Cesium.Cartesian3(0.0, 500.0, 0.0)
         };
         const billboard = {
@@ -31,23 +37,26 @@ export function createMarkerLayer(viewer,options){
             image : billBoardConfig.image,
             width : billBoardConfig.width,
             height : billBoardConfig.height,
-            distanceDisplayCondition: new Cesium.DistanceDisplayCondition(billBoardConfig.DDC_start || 0,billBoardConfig.DDC_end || 200000)
+            // distanceDisplayCondition: new Cesium.DistanceDisplayCondition(billBoardConfig.distanceDisplayCondition ? {...billBoardConfig.distanceDisplayCondition} : 0,20000000),
+            // scaleByDistance : new Cesium.NearFarScalar(billBoardConfig.scaleByDistance ? {...billBoardConfig.scaleByDistance} : 1.0,0.0,0.0,0.0),
         };
         const point = {
-            show:isPoint,
+            show: isPoint,
             pixelSize : 5,
             color : Cesium.Color.RED,
             outlineColor : Cesium.Color.WHITE,
             outlineWidth : 2
         };
-        layer.entities.add({
+        const entity = layer.entities.add({
             id: entitiesId,
             position,
             label,
             billboard,
-            point
+            point,
+            attr
         });
+        viewer.dataSources.add(layer);
     });
-    viewer.zoomTo(layer);
+    if(isZoomTo) viewer.zoomTo(layer);
     return layer
 }

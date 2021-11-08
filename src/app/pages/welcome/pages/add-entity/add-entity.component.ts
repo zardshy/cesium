@@ -29,14 +29,13 @@ export class AddEntityComponent implements OnInit {
     // const handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
     // handler.setInputAction((movement)=>{
     //   const picked = this.viewer.scene.pick(movement.position);
-    //   console.log(picked)
-    //   if(picked){
-    //     const entity = Cesium.defaultValue(picked.id, picked.primitive.id);
-    //     if (entity instanceof Cesium.Entity) {
-    //       console.log(entity)
-    //       return entity;
-    //     }
-    //   }
+      // if(picked){
+      //   const entity = Cesium.defaultValue(picked.id, picked.primitive.id);
+      //   if (entity instanceof Cesium.Entity) {
+      //     console.log(entity)
+      //     return entity;
+      //   }
+      // }
     // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
   }
 
@@ -206,12 +205,50 @@ export class AddEntityComponent implements OnInit {
       width: 30,
       height: 50,
       image: 'assets/IMG/aa.jpg',
-      DDC_start:0,
-      DDC_end:200000
+      distanceDisplayCondition:[0,200000],
+      scaleByDistance:[1, 1, 2e5, 1]
     }
-    createMarkerLayer(this.viewer,{dataArr,layerId:'markerlayer',isLabel:true,isBillBoard:true,billBoardConfig,isPoint:false});
+    let layerConf = {
+      dataArr,
+      layerId:'markerlayer',
+      fieldNameId:'name',
+      isLabel:true,
+      isBillBoard:true,
+      billBoardConfig,
+      isPoint:false,
+      isZoomTo: true
+    }
+    createMarkerLayer(this.viewer,layerConf);
+
+    function callBack(res){
+      console.log(res)
+    }
+    let handler = this.addMarkerPick(callBack);
+    setTimeout(() => {
+      this.removeMarkerPick(handler)
+    }, 5000);
+
       //this.viewer.dataSources.remove(this.viewer.dataSources.getByName('markerlayer')[0]); // 删除单个数据集
       // this.viewer.dataSources.removeAll() // 删除所有数据集
+  }
+
+
+  addMarkerPick(callBack){
+      const handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
+      handler.setInputAction((movement)=>{
+        const picked = this.viewer.scene.pick(movement.position);
+        if (picked){
+          const entity = Cesium.defaultValue(picked.id, picked.primitive.id);
+          if (entity instanceof Cesium.Entity) {
+            callBack(entity.attr)
+          }
+        }
+      },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+      return handler
+  }
+
+  removeMarkerPick(handler){
+    handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK)
   }
 
 
