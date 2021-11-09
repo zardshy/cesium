@@ -34,3 +34,10 @@ export default class tfCoord{
 function xyzToScreen(cartesian3){
     return Cesium.SceneTransforms.wgs84ToWindowCoordinates(cartesian3)
 }
+
+
+// var a = tfCoord.lnglatToxyz(121.1,31.1,10)
+// console.log(a)
+
+// var b = tfCoord.xyzTolnglat(a.x,a.y,a.z);
+// console.log(b)
