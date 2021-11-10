@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import tfCoord from '../../func/transformCoord';
-import { initCameraView } from '../../func/cameraFunc'
+import { getCameraXyzHpr,initCameraView } from '../../func/cameraFunc'
 declare var Cesium:any;
 
 @Component({
@@ -28,11 +28,8 @@ export class CameraComponent implements OnInit {
   }
 
   getViewerPosition(){
-    var position = this.viewer.scene.camera.position;
-    position.h = this.viewer.scene.camera.heading
-    position.p = this.viewer.scene.camera.pitch
-    position.r = this.viewer.scene.camera.roll
-    console.log(position)
+    const res = getCameraXyzHpr(this.viewer)
+    console.log(res)
     // var tfPositoon = tfCoord.xyzTolnglat(position.x,position.y,position.z);
     // console.log(tfPositoon)
 
@@ -166,10 +163,10 @@ export class CameraComponent implements OnInit {
           var ct = Cesium.Cartesian3.fromDegrees(position.lon,position.lat,position.alt)
           // heading = Cesium.Math.toRadians(x);
           
-          this.viewer.camera.lookAt(ct, new Cesium.HeadingPitchRange(heading, pitch, range))
+          // this.viewer.camera.lookAt(ct, new Cesium.HeadingPitchRange(heading, pitch, range))
 
-          // var transform = Cesium.Transforms.eastNorthUpToFixedFrame(ct);
-          // this.viewer.scene.camera.lookAtTransform(transform, new Cesium.HeadingPitchRange(0, -Math.PI/8, 2900));
+          var transform = Cesium.Transforms.eastNorthUpToFixedFrame(ct);
+          this.viewer.scene.camera.lookAtTransform(transform, new Cesium.HeadingPitchRange(0, -Math.PI/8, 2900));
         })
 
   }
