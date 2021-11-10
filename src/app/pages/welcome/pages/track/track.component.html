@@ -1,0 +1,11 @@
+<div>
+    <div style='margin:10px'>
+        <button nz-button nzType="primary" (click)='createObj()'>创建车辆</button>
+        <button nz-button nzType="primary" (click)='play()'>播放</button>
+        <button nz-button nzType="primary" (click)='pause()'>暂停</button>
+        <button nz-button nzType="primary" (click)='thirdPerson()'>第三人称自由视角</button>
+        <button nz-button nzType="primary" (click)='firstPerson()'>第一人称视角</button>
+        <button nz-button nzType="primary" (click)='removeFollowCamera()'>解除视角跟随</button>
+    </div>
+    <app-init-cesium (mapLoaded) ='mapLoaded($event)'></app-init-cesium>
+</div>
