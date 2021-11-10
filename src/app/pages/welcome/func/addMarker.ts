@@ -55,8 +55,8 @@ export function createMarkerLayer(viewer,options){
             point,
             attr
         });
-        viewer.dataSources.add(layer);
     });
+    viewer.dataSources.add(layer);
     if(isZoomTo) viewer.zoomTo(layer);
     return layer
 }

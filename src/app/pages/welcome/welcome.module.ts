@@ -11,7 +11,8 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { CameraComponent } from './pages/camera/camera.component'
+import { CameraComponent } from './pages/camera/camera.component';
+import { TrackComponent } from './pages/track/track.component'
 @NgModule({
   imports: [WelcomeRoutingModule,
     NzLayoutModule,
@@ -19,7 +20,7 @@ import { CameraComponent } from './pages/camera/camera.component'
     FormsModule,
     NzButtonModule,
 ],
-  declarations: [WelcomeComponent, InitCesiumComponent, AddEntityComponent, AddGltfComponent, Tiles3dComponent, CameraComponent],
+  declarations: [WelcomeComponent, InitCesiumComponent, AddEntityComponent, AddGltfComponent, Tiles3dComponent, CameraComponent, TrackComponent],
   exports: [WelcomeComponent]
 })
 export class WelcomeModule { }

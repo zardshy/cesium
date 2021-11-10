@@ -14,6 +14,7 @@ import { AddEntityComponent } from './pages/add-entity/add-entity.component';
 import { AddGltfComponent } from './pages/add-gltf/add-gltf.component';
 import { Tiles3dComponent } from './pages/tiles3d/tiles3d.component';
 import { CameraComponent } from './pages/camera/camera.component' 
+import { TrackComponent } from './pages/track/track.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,12 @@ const routes: Routes = [
         path: 'Add3Dtiles', component: Tiles3dComponent,
         data: {
           breadcrumb: '添加3Dtiles'
+        },
+      },
+      {
+        path: 'track', component: TrackComponent,
+        data: {
+          breadcrumb: '轨迹运动'
         },
       },
       {
