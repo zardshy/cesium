@@ -6,20 +6,23 @@ export class TrackAnimation{
     public handleEntity;  
     public startTime;
     public stopTime;
-    public isPathLine = true;
-    public isPathPoint = true;
+    public entityRunTime;
+    public multiplier = 0.5;
+    public ifPathLine = true;
+    public ifPathPoint = true;
     constructor(options){
-        const { viewer,pathArr,entity,isPathLine,isPathPoint } = options;
+        const { viewer,pathArr,entity,runTime,ifPathLine,ifPathPoint } = options;
         this.viewer = viewer;
         this.pathPositions = pathArr;
         this.handleEntity = entity;
-        if (typeof(isPathLine) != 'undefined') this.isPathLine = isPathLine;
-        if (typeof(isPathPoint) != 'undefined') this.isPathPoint = isPathPoint;
+        this.entityRunTime = runTime;
+        if (typeof(ifPathLine) != 'undefined') this.ifPathLine = ifPathLine;
+        if (typeof(ifPathPoint) != 'undefined') this.ifPathPoint = ifPathPoint;
         this._init();
     }
     _init(){
         //设置随机种子使随机数一致
-        Cesium.Math.setRandomNumberSeed(3);
+        Cesium.Math.setRandomNumberSeed(888);
         this._setTimeExtent();
         this._setProperty();
     }
@@ -27,7 +30,8 @@ export class TrackAnimation{
         // 起始时间
         this.startTime = Cesium.JulianDate.fromDate(new Date());
         // 结束时间
-        this.stopTime = Cesium.JulianDate.addSeconds(this.startTime, 360, new Cesium.JulianDate());
+        // this.stopTime = Cesium.JulianDate.addSeconds(this.startTime, this.pathPositions.length-1, new Cesium.JulianDate);
+        this.stopTime = Cesium.JulianDate.addSeconds(this.startTime, 360, new Cesium.JulianDate);
         // 设置始时钟始时间
         this.viewer.clock.startTime = this.startTime.clone();
         // 设置时钟当前时间
@@ -35,18 +39,33 @@ export class TrackAnimation{
         // 设置始终停止时间
         this.viewer.clock.stopTime  = this.stopTime.clone();
         // 时间速率，数字越大时间过的越快
-        this.viewer.clock.multiplier = 10;
+        this.viewer.clock.multiplier = this.multiplier;
+        // SYSTEM_CLOCK 将时钟设置为当前系统时间；忽略所有其他设置 
+        // SYSTEM_CLOCK_MULTIPLIER  系统时间*multiplier
+        // TICK_DEPENDENT   提前固定时间
+        this.viewer.clock.clockStep  = Cesium.ClockStep.SYSTEM_CLOCK_MULTIPLIER
         // 循环执行
         this.viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
     }
     // 计算位置property
     _getProperty(){
+        function getEndPoint (time, result) {
+            console.log(time)
+            console.log(result)
+            return result
+        }
         const property = new Cesium.SampledPositionProperty();
         this.pathPositions.forEach((element,index) => {
-            const time = Cesium.JulianDate.addSeconds(this.startTime, index*60, new Cesium.JulianDate);
+            // const time = Cesium.JulianDate.addSeconds(this.startTime, index, new Cesium.JulianDate);
+            const time = Cesium.JulianDate.addSeconds(this.entityRunTime, index, new Cesium.JulianDate);
             const position = Cesium.Cartesian3.fromDegrees(element.lng, element.lat,element.alt);
             property.addSample(time, position);
-            if (this.isPathPoint){
+            // property.getValueInReferenceFrame(getEndPoint);
+            // 修改停止时间 确保每个entiry轨迹完整
+            if (index === this.pathPositions.length-1){
+                this.viewer.clock.stopTime  = Cesium.JulianDate.addSeconds(this.entityRunTime, index, new Cesium.JulianDate)
+            }
+            if (this.ifPathPoint){
                 this.viewer.entities.add({
                     position: position,
                     point: {
@@ -58,7 +77,7 @@ export class TrackAnimation{
                 })
             }
         });
-        return property
+        return property 
     }
     _setProperty(){
         const satellitePosition = this._getProperty();
@@ -70,7 +89,7 @@ export class TrackAnimation{
         this.handleEntity.position = satellitePosition;
         // 基于位置移动自动计算方向
         this.handleEntity.orientation = new Cesium.VelocityOrientationProperty(satellitePosition)
-        if (this.isPathLine){
+        if (this.ifPathLine){
             this.handleEntity.path = {
                 resolution : 0.1,
                 material : new Cesium.PolylineGlowMaterialProperty({
@@ -80,26 +99,36 @@ export class TrackAnimation{
                 width :3
             }
         }
-        this._setInterpolation();
+        this._setInterpolation(1);
         this.sideView()
     }
     // 插值器
-    _setInterpolation(){
-        // 线性插值法
-        // this.handleEntity.position.setInterpolationOptions({
-        //     interpolationDegree: 1,
-        //     interpolationAlgorithm: Cesium.LinearApproximation,
-        // });
-        // 拉格朗日插值法
-        this.handleEntity.position.setInterpolationOptions({
-            interpolationDegree: 5,
-            interpolationAlgorithm:Cesium.LagrangePolynomialApproximation,
-        });
-        // 埃尔米特插值
-        // this.handleEntity.position.setInterpolationOptions({
-        //     interpolationDegree: 2,
-        //     interpolationAlgorithm: Cesium.HermitePolynomialApproximation,
-        // });
+    _setInterpolation(type){
+        switch (type) {
+            case 1:
+                // 线性插值
+                this.handleEntity.position.setInterpolationOptions({
+                    interpolationDegree: 1,
+                    interpolationAlgorithm: Cesium.LinearApproximation,
+                });
+                break;
+            case 2:
+                // 拉格朗日插值
+                this.handleEntity.position.setInterpolationOptions({
+                    interpolationDegree: 5,
+                    interpolationAlgorithm:Cesium.LagrangePolynomialApproximation,
+                });
+                break;
+            case 3:
+                // 埃尔米特插值
+                this.handleEntity.position.setInterpolationOptions({
+                    interpolationDegree: 2,
+                    interpolationAlgorithm: Cesium.HermitePolynomialApproximation,
+                });
+                break;
+            default:
+                break;
+        }
     }
     // 计算模型矩阵 相机视角锁定
     _followCameraCallBack(){
@@ -165,6 +194,7 @@ export class TrackAnimation{
     // 取消相机跟随
     removeFollowCamera(){
         this.viewer.trackedEntity = undefined;
+        this.viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY)
         this.viewer.scene.preRender.removeEventListener(this._followCameraCallBack, this)
     }
 }
