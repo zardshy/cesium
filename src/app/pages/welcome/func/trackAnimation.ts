@@ -24,26 +24,23 @@ export class TrackAnimation{
         this._setProperty();
     }
     _setTimeExtent(){
-        // 起始时间
         this.startTime = Cesium.JulianDate.fromDate(new Date());
-        // 结束时间
         this.stopTime = Cesium.JulianDate.addSeconds(this.startTime, 360, new Cesium.JulianDate());
-        // 设置始时钟始时间
         this.viewer.clock.startTime = this.startTime.clone();
-        // 设置时钟当前时间
         this.viewer.clock.currentTime = this.startTime.clone();
-        // 设置始终停止时间
         this.viewer.clock.stopTime  = this.stopTime.clone();
         // 时间速率，数字越大时间过的越快
         this.viewer.clock.multiplier = 10;
-        // 循环执行
+        // CLAMPED：达到终止时间后停止
+        // LOOP_STOP：达到终止时间后重新循环
+        // UNBOUNDED：达到终止时间后继续读秒        
         this.viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
     }
     // 计算位置property
     _getProperty(){
         const property = new Cesium.SampledPositionProperty();
         this.pathPositions.forEach((element,index) => {
-            const time = Cesium.JulianDate.addSeconds(this.startTime, index*60, new Cesium.JulianDate);
+            const time = Cesium.JulianDate.addSeconds(this.startTime, index, new Cesium.JulianDate);
             const position = Cesium.Cartesian3.fromDegrees(element.lng, element.lat,element.alt);
             property.addSample(time, position);
             if (this.isPathPoint){
@@ -81,7 +78,8 @@ export class TrackAnimation{
             }
         }
         this._setInterpolation();
-        this.sideView()
+        // this.sideView()
+        this.viewer.trackedEntity = this.handleEntity;
     }
     // 插值器
     _setInterpolation(){
@@ -92,7 +90,7 @@ export class TrackAnimation{
         // });
         // 拉格朗日插值法
         this.handleEntity.position.setInterpolationOptions({
-            interpolationDegree: 5,
+            interpolationDegree: 10,
             interpolationAlgorithm:Cesium.LagrangePolynomialApproximation,
         });
         // 埃尔米特插值

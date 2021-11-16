@@ -5,7 +5,7 @@
 
 declare var Cesium :any;
 
-export default class tfCoord{
+export default class TfCoords{
     constructor(){}
     // 经纬度转换为世界坐标
     static lnglatToxyz(lng,lat,alt?,ellipsoid?){
