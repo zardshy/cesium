@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-10 20:17:00
- * @LastEditTime: 2021-11-10 21:31:20
+ * @LastEditTime: 2021-11-14 00:22:52
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \ngcesium\src\app\pages\welcome\pages\track\track.component.ts
@@ -20,7 +20,8 @@ import { TrackAnimation } from '../../func/trackAnimation';
 export class TrackComponent implements OnInit {
   public viewer;
   public trackObj;
-
+  public startTime;
+  public stopTime;
   constructor() { }
 
   ngOnInit(): void {
@@ -163,6 +164,19 @@ export class TrackComponent implements OnInit {
         color: new Cesium.Color(1.0, 1.0, 1.0, 1.0, 0)
       }
     });
+    const model1 = this.viewer.entities.add({
+      id:'zardcar1',
+      model: {
+          uri: 'assets/models/gltf/Car1120.gltf',
+          minimumPixelSize: 64,
+      },
+      point: {
+        pixelSize: 1,
+        color: new Cesium.Color(1.0, 1.0, 1.0, 1.0, 0)
+      }
+    });
+    const startTime = Cesium.JulianDate.fromDate(new Date());
+    const time = Cesium.JulianDate.addSeconds(startTime, 1, new Cesium.JulianDate());
     const dataArr = flyConf[0].pathPositionArr;
       const dataArr1 = [
         { lng: 121.1, lat:31.1, alt:100 },
@@ -175,17 +189,25 @@ export class TrackComponent implements OnInit {
       ]
     this.trackObj = new TrackAnimation({
       viewer: this.viewer,
-      pathArr: dataArr,
+      pathArr: dataArr1,
       entity: model,
+      runTime: startTime
+    });
+
+    let  trackObj1= new TrackAnimation({
+      viewer: this.viewer,
+      pathArr: dataArr1,
+      entity: model1,
+      runTime: time
     });
   }
 
   play(){
-    this.trackObj.play();
+    this.viewer.clock.shouldAnimate = true;
   }
 
   pause(){
-    this.trackObj.pause();
+    this.viewer.clock.shouldAnimate = false;
   }
 
   firstPerson(){

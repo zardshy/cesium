@@ -51,7 +51,7 @@ export class Tiles3dComponent implements OnInit {
         maximumNumberOfLoadedTiles: 100000, // 可使用最大内存量
         luminanceAtZenith: 1,//太阳光照在天顶的亮度，以每平方米千坎德拉为单位，用于该模型的过程环境图。
         imageBasedLightingFactor: new Cesium.Cartesian2(1.0, 1.0),  //缩放来自地球、天空、大气和恒星天空盒的基于漫反射和镜面反射图像的照明
-        lightColor: new Cesium.Cartesian3(1, 2, 3),//着色模型时的灯光颜色。当undefined现场的灯光颜色来代替。
+        // lightColor: new Cesium.Cartesian3(1, 2, 0),//着色模型时的灯光颜色。当undefined现场的灯光颜色来代替。
         showOutline: true, // 是否显示模型扩展轮廓
         // ellipsoid: new Cesium.Ellipsoid(new Cesium.Ellipsoid.WGS84), // 椭球体
 
@@ -69,10 +69,9 @@ export class Tiles3dComponent implements OnInit {
       });
 
 
-      // 异步加载模型
+
       this.tileset.readyPromise.then((tileset)=>{
         this.viewer.scene.primitives.add(tileset);
-
         //获取3Dtlies的bounds范围
         var boundingSphere = tileset.boundingSphere;
         console.log(boundingSphere)
@@ -85,11 +84,34 @@ export class Tiles3dComponent implements OnInit {
         console.log(error);
       });
 
-      // 加载完成回调
+
       this.tileset.allTilesLoaded.addEventListener(()=> {
-        console.log('All tiles are loaded');
+        console.log('tileset loaded');
       });
 
+    }
+
+    setColorByAttr(){
+      // this.tileset.style = new Cesium.Cesium3DTileStyle({
+      //   color: {
+      //       conditions: [
+      //           ['${id} >= 300', 'rgba(45, 0, 75, 0.5)'],
+      //           ['${id} >= 200', 'rgb(102, 71, 151)'],
+      //           ['${id} >= 100', 'rgb(170, 162, 204)'],
+      //           ['${id} >= 50', 'rgb(224, 226, 238)'],
+      //           ['${id} >= 25', 'rgb(252, 230, 200)'],
+      //           ['${id} >= 10', 'rgb(248, 176, 87)'],
+      //           ['${id} >= 5', 'rgb(198, 106, 11)'],
+      //           ['true', 'rgb(127, 59, 8)']
+      //       ]
+      //   }
+      // });
+      this.tileset.style = new Cesium.Cesium3DTileStyle({
+        color : "(regExp('3').test(String(${id}))) ? color('cyan', 0.9) : color('purple', 0.5)"
+      });
+      // this.tileset.style = new Cesium.Cesium3DTileStyle({
+      //   show : '${height} > 200'
+      // });
     }
 
 
@@ -142,6 +164,8 @@ export class Tiles3dComponent implements OnInit {
         if(!Cesium.defined(picked)){
           return
         }
+        console.log(picked)
+        console.log(picked.getPropertyNames())
         silhouetteBlue.uniforms.color = Cesium.Color.RED;
         silhouetteBlue.selected = [picked];
       },Cesium.ScreenSpaceEventType.LEFT_CLICK)
@@ -156,7 +180,7 @@ export class Tiles3dComponent implements OnInit {
       this.nameOverlay.style.display = "block";
       this.nameOverlay.style.bottom =this.viewer.canvas.clientHeight - movement.endPosition.y + "px";
       this.nameOverlay.style.left = movement.endPosition.x + 300 + "px";
-      // var name = pickedFeature.getProperty("BIN");
+      // var name = picked.getProperty("id");
       var name = picked.pickId.key;
       this.nameOverlay.textContent = name.toString();
     }
@@ -169,7 +193,16 @@ export class Tiles3dComponent implements OnInit {
 
 
     updateSym(){
+      this.tileset.style = undefined
       numberCity(this.viewer,this.tileset)
+    }
+
+    updateHeight(){
+        const cartographic = Cesium.Cartographic.fromCartesian(this.tileset.boundingSphere.center);
+        const surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
+        const offset = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 500);
+        const translation = Cesium.Cartesian3.subtract(offset, surface, new Cesium.Cartesian3());
+        this.tileset.modelMatrix = Cesium.Matrix4.fromTranslation(translation);
     }
 
   }

@@ -30,11 +30,12 @@ export class AddGltfComponent implements OnInit {
   }
 
   mouseSelect(){
+
     // 边缘检测
     var silhouetteBlue = Cesium.PostProcessStageLibrary.createEdgeDetectionStage();
     silhouetteBlue.enabled = true;
-    silhouetteBlue.uniforms.color = Cesium.Color.BLUE;
-    silhouetteBlue.uniforms.length = 0.05;
+    silhouetteBlue.uniforms.color = Cesium.Color.RED
+    silhouetteBlue.uniforms.length = 1;
     silhouetteBlue.selected = [];
 
     this.viewer.scene.postProcessStages.add(
@@ -50,9 +51,9 @@ export class AddGltfComponent implements OnInit {
       if(!Cesium.defined(picked)){
         return
       }
-      console.log(picked)
       if (picked.id){
         silhouetteBlue.selected = [picked.primitive];
+        console.log(1)
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
   }
@@ -67,6 +68,35 @@ export class AddGltfComponent implements OnInit {
     var hpr = new Cesium.HeadingPitchRoll(heading, pitch, roll);
     // 模型姿态
     var orientation = Cesium.Transforms.headingPitchRollQuaternion(position, hpr);
+    var r= 255, g=0, b=0;
+    var fadeColor = new Cesium.CallbackProperty(function(time, result){
+      if (r > 0 && b === 0) {
+              r--;
+              g++;
+          }
+          if (g > 0 && r === 0) {
+              g--;
+              b++;
+          }
+          if (b > 0 && g === 0) {
+              r++;
+              b--;
+          }
+          return Cesium.Color.fromBytes(r, g, b, 160, result);
+  }, false);
+
+  let w = 1
+  var fadeWidth = new Cesium.CallbackProperty(function(time, result){
+    if(w>=8){
+      w= 0;
+    }
+    else if(w<8){
+      w+= 0.25
+    }
+    // console.log(Math.floor( Math.random() * (5 - 0) + 5))
+    return w
+}, false);
+
     var entity = this.viewer.entities.add({
       id:'zard',
       position : position,
@@ -75,7 +105,8 @@ export class AddGltfComponent implements OnInit {
         text : '测试名称\n 123',
         // font : '14pt Source Han Sans CN',
         font : '14pt monospace',
-        fillColor:new Cesium.Color.fromCssColorString("rgba(255, 255, 255,1)"),   //字体颜色
+        // fillColor:new Cesium.Color.fromCssColorString("rgba(255, 255, 255,1)"),   //字体颜色
+        fillColor:fadeColor,
         scale: 0.8,
         backgroundColor: new Cesium.Color.fromCssColorString("rgba(28, 28, 28, 1)"),    //背景颜色
         backgroundPadding:new Cesium.Cartesian2(20,10) ,
@@ -105,14 +136,45 @@ export class AddGltfComponent implements OnInit {
           // color: new Cesium.Color(0 ,224 ,0,0.001),
           uri : 'assets/models/gltf/Car1120.gltf',
           scale : 50,
+          color:fadeColor,
+          silhouetteColor :Cesium.Color.RED,
+          silhouetteSize  :fadeWidth,
           distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 4000)
       }
     })
+
     this.viewer.zoomTo(entity);
   }
 
   // 通过primitive 添加模型
   addGltfModel_primitives(){
+    let w = 1
+    var fadeWidth = new Cesium.CallbackProperty(function(time, result){
+      if(w>=8){
+        w= 0;
+      }
+      else if(w<8){
+        w+= 0.25
+      }
+      // console.log(Math.floor( Math.random() * (5 - 0) + 5))
+      return w
+  }, false);
+  var r= 255, g=0, b=0;
+  var fadeColor = new Cesium.CallbackProperty(function(time, result){
+    if (r > 0 && b === 0) {
+            r--;
+            g++;
+        }
+        if (g > 0 && r === 0) {
+            g--;
+            b++;
+        }
+        if (b > 0 && g === 0) {
+            r++;
+            b--;
+        }
+        return Cesium.Color.fromBytes(r, g, b, 160, result);
+}, true);
     const position = Cesium.Cartesian3.fromDegrees(121.62898254394531, 31.02804946899414, 0)
     // 模型矩阵
     const modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(position)
@@ -131,9 +193,12 @@ export class AddGltfComponent implements OnInit {
       maximumScale: 20000, // 模型的最大比例尺大小。 minimumPixelSize的上限,
       // shadows:
       // color: new Cesium.Color(1,2,3,1), // 混合渲染色  
+      color:fadeColor,
       // ColorBlendMode :10,
       // colorBlendAmount: 1,
       // lightColor:new Cesium.Color(1,2,3,1),
+      // silhouetteColor :Cesium.Color.RED,
+      // silhouetteSize  :fadeWidth,
       showOutline: true, //是否扩展轮廓
       incrementallyLoadTextures: true, // 加载模型后纹理是否可以继续流入
       runAnimations: true, // 是否应启动模型中指定的glTF动画
