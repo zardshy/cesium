@@ -25,6 +25,8 @@ export class TrackAnimation{
         Cesium.Math.setRandomNumberSeed(888);
         this._setTimeExtent();
         this._setProperty();
+        this._setInterpolation(1);
+        this.sideView()
     }
     _setTimeExtent(){
         this.startTime = Cesium.JulianDate.fromDate(new Date());
@@ -46,18 +48,12 @@ export class TrackAnimation{
     }
     // 计算位置property
     _getProperty(){
-        function getEndPoint (time, result) {
-            console.log(time)
-            console.log(result)
-            return result
-        }
         const property = new Cesium.SampledPositionProperty();
         this.pathPositions.forEach((element,index) => {
             // const time = Cesium.JulianDate.addSeconds(this.startTime, index, new Cesium.JulianDate);
             const time = Cesium.JulianDate.addSeconds(this.entityRunTime, index, new Cesium.JulianDate);
             const position = Cesium.Cartesian3.fromDegrees(element.lng, element.lat,element.alt);
             property.addSample(time, position);
-            // property.getValueInReferenceFrame(getEndPoint);
             // 修改停止时间 确保每个entiry轨迹完整
             if (index === this.pathPositions.length-1){
                 this.viewer.clock.stopTime  = Cesium.JulianDate.addSeconds(this.entityRunTime, index, new Cesium.JulianDate)
@@ -96,8 +92,6 @@ export class TrackAnimation{
                 width :3
             }
         }
-        this._setInterpolation(1);
-        this.sideView()
     }
     // 插值器
     _setInterpolation(type){

@@ -32,3 +32,22 @@ export function getCameraXyzHpr(viewer){
     CameraXyzHpr.r = viewer.scene.camera.roll
     return CameraXyzHpr
 }
+
+// 缩放至model
+export function zoomToModel(viewer,model){
+    const controller = viewer.scene.screenSpaceCameraController;
+    const r =2.0 * Math.max(model.boundingSphere.radius, viewer.scene.camera.frustum.near);
+    controller.minimumZoomDistance = r * 0.5;
+
+    const center = Cesium.Matrix4.multiplyByPoint(
+      model.modelMatrix,
+      model.boundingSphere.center,
+      new Cesium.Cartesian3()
+    );
+    const heading = Cesium.Math.toRadians(230.0);
+    const pitch = Cesium.Math.toRadians(-20.0);
+    viewer.scene.camera.lookAt(
+      center,
+      new Cesium.HeadingPitchRange(heading, pitch, r * 100.0)
+    );
+}

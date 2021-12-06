@@ -150,7 +150,7 @@ export class TrackComponent implements OnInit {
         viewer.scene.postProcessStages.add(ScanPostStage);
     }
 
-  createObj(){
+  createObj1(){
     this.scanLine()
     this.julianDateFunc()
     const model = this.viewer.entities.add({
@@ -202,6 +202,62 @@ export class TrackComponent implements OnInit {
     });
   }
 
+
+  createObj(){
+    var pathPosition = new Cesium.SampledPositionProperty();
+    var entityPath = this.viewer.entities.add({
+      position : pathPosition,
+      name : 'path',
+      path : {
+          show : true,
+          leadTime : 0,
+          trailTime : 60,
+          width : 10,
+          resolution : 1,
+          material : new Cesium.PolylineGlowMaterialProperty({
+              glowPower : 0.3,
+              color : Cesium.Color.PALEGOLDENROD
+          })
+      }
+    });
+    let lng = 121.1;
+    let lat = 31.1;
+    let alt = 1;
+    this.viewer.trackedEntity = entityPath;
+    this.viewer.clock.shouldAnimate = true;
+
+
+    // setInterval(()=>{
+    //   const position = Cesium.Cartesian3.fromDegrees(lng, lat,alt);
+    //   entityPath.position.addSample(Cesium.JulianDate.now(), position);
+    //   lng+= 0.001;
+    //   lat+= 0.001;
+    //   alt+= 0.001;
+    // },100)
+
+ 
+      // lng = 121.2;
+      // lat = 31.2;
+      // alt =11;
+      // let addSeconds= Cesium.JulianDate.addSeconds(Cesium.JulianDate.now(),3,new Cesium.JulianDate());
+      // const position = Cesium.Cartesian3.fromDegrees(lng, lat,alt);
+      // entityPath.position.addSample(addSeconds, position);
+ 
+
+    // this.viewer.scene.preUpdate.addEventListener((scene, time)=>{
+    //   // let speedVector = Cesium.Cartesian3.multiplyByScalar(Cesium.Cartesian3.UNIT_X, speed / 10, speedVector);
+    //   // let position = Cesium.Matrix4.multiplyByPoint(planePrimitive.modelMatrix, speedVector, position);
+    //   const position = Cesium.Cartesian3.fromDegrees(lng, lat,alt);
+    //   entityPath.position.addSample(Cesium.JulianDate.now(), position);
+    //   // Cesium.Transforms.headingPitchRollToFixedFrame(position, hpRoll, Cesium.Ellipsoid.WGS84, fixedFrameTransform, planePrimitive.modelMatrix);
+    //   lng+= 0.001;
+    //   lat+= 0.001;
+    //   alt+= 0.001;
+    // });
+
+  }
+
+  
   play(){
     this.viewer.clock.shouldAnimate = true;
   }

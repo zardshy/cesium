@@ -3,6 +3,8 @@ declare var Cesium:any;
 declare var turf:any;
 import flyConf from '../track/flyPath'
 import { TrackAnimation } from '../../func/trackAnimation'
+import { createModelByPrimitive,createModelsCollection,createModelByEntity } from '../../func/createModel';
+import { zoomToModel } from '../../func/cameraFunc'
 
 @Component({
   selector: 'app-add-gltf',
@@ -73,29 +75,53 @@ export class AddGltfComponent implements OnInit {
       if (r > 0 && b === 0) {
               r--;
               g++;
-          }
-          if (g > 0 && r === 0) {
-              g--;
-              b++;
-          }
-          if (b > 0 && g === 0) {
-              r++;
-              b--;
-          }
-          return Cesium.Color.fromBytes(r, g, b, 160, result);
-  }, false);
+      }
+      if (g > 0 && r === 0) {
+          g--;
+          b++;
+      }
+      if (b > 0 && g === 0) {
+          r++;
+          b--;
+      }
+      return Cesium.Color.fromBytes(r, g, b, 160, result);}, false);
 
-  let w = 1
-  var fadeWidth = new Cesium.CallbackProperty(function(time, result){
-    if(w>=8){
-      w= 0;
-    }
-    else if(w<8){
-      w+= 0.25
-    }
-    // console.log(Math.floor( Math.random() * (5 - 0) + 5))
-    return w
+      let w = 1
+      var fadeWidth = new Cesium.CallbackProperty(function(time, result){
+        if(w>=8){
+          w= 0;
+        }
+        else if(w<8){
+          w+= 0.25
+        }
+        // console.log(Math.floor( Math.random() * (5 - 0) + 5))
+        return w
 }, false);
+
+let _num = 0
+
+function getLineColorCallbackProperty(color) {
+  var callback = new Cesium.CallbackProperty(function(t, c) {
+    if ((_num % 2) === 0) {
+      c.alpha -= 0.05
+    } else {
+      c.alpha += 0.05
+    }
+
+    if (c.alpha <= 0.2) {
+      c.alpha = 0.21
+      _num++
+    } else if (c.alpha >= 0.7) {
+      c.alpha = 0.69
+      _num++
+    }
+    // entity的颜色透明 并不影响材质，并且 entity也会透明
+    return color.withAlpha(c.alpha)
+  })
+
+  return callback
+}
+
 
     var entity = this.viewer.entities.add({
       id:'zard',
@@ -136,9 +162,9 @@ export class AddGltfComponent implements OnInit {
           // color: new Cesium.Color(0 ,224 ,0,0.001),
           uri : 'assets/models/gltf/Car1120.gltf',
           scale : 50,
-          color:fadeColor,
-          silhouetteColor :Cesium.Color.RED,
-          silhouetteSize  :fadeWidth,
+          // color:getLineColorCallbackProperty(Cesium.Color.RED),
+          // silhouetteColor :Cesium.Color.RED.withAlpha(10),
+          // silhouetteSize  :fadeWidth,
           distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 4000)
       }
     })
@@ -148,35 +174,23 @@ export class AddGltfComponent implements OnInit {
 
   // 通过primitive 添加模型
   addGltfModel_primitives(){
-    let w = 1
-    var fadeWidth = new Cesium.CallbackProperty(function(time, result){
-      if(w>=8){
-        w= 0;
-      }
-      else if(w<8){
-        w+= 0.25
-      }
-      // console.log(Math.floor( Math.random() * (5 - 0) + 5))
-      return w
-  }, false);
-  var r= 255, g=0, b=0;
-  var fadeColor = new Cesium.CallbackProperty(function(time, result){
-    if (r > 0 && b === 0) {
-            r--;
-            g++;
-        }
-        if (g > 0 && r === 0) {
-            g--;
-            b++;
-        }
-        if (b > 0 && g === 0) {
-            r++;
-            b--;
-        }
-        return Cesium.Color.fromBytes(r, g, b, 160, result);
-}, true);
+    let opt = {
+      lng:121.62898254394531,
+      lat:31.02804946899414,
+      alt:1,
+      h:-90,
+      p:0,
+      r:0
+    }
+    let callBack = (model) =>{
+      console.log(model)
+      zoomToModel(this.viewer,model)
+    }
+    let model = createModelByPrimitive(this.viewer,opt,callBack)
+    // createModelsCollection(this.viewer)
+    // let entity = createModelByEntity(this.viewer,null,callBack)
+    return
     const position = Cesium.Cartesian3.fromDegrees(121.62898254394531, 31.02804946899414, 0)
-    // 模型矩阵
     const modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(position)
     
     this.model = this.viewer.scene.primitives.add(
@@ -192,8 +206,7 @@ export class AddGltfComponent implements OnInit {
       minimumPixelSize: 128, // 最小像素大小
       maximumScale: 20000, // 模型的最大比例尺大小。 minimumPixelSize的上限,
       // shadows:
-      // color: new Cesium.Color(1,2,3,1), // 混合渲染色  
-      color:fadeColor,
+      color: new Cesium.Color(1,2,3,1), // 混合渲染色  
       // ColorBlendMode :10,
       // colorBlendAmount: 1,
       // lightColor:new Cesium.Color(1,2,3,1),

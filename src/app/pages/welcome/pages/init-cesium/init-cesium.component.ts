@@ -7,6 +7,7 @@
  * @FilePath: \ngcesium\src\app\pages\welcome\pages\init-cesium\init-cesium.component.ts
  */
 import { Component, OnInit,Output, EventEmitter  } from '@angular/core';
+import addBaseMap from '../../func/baseMap'
 declare var Cesium:any;
 @Component({
   selector: 'app-init-cesium',
@@ -39,18 +40,18 @@ export class InitCesiumComponent implements OnInit {
       shouldAnimate:false,  // 模型动画
     }
     this.viewer = new Cesium.Viewer('appCesium',controlConf);
-    // 显示fps
+    // fps
     this.viewer.scene.debugShowFramesPerSecond = true;
     // logo
     this.viewer.cesiumWidget.creditContainer.style.display = "none"
     // 相机是否允许进入地下
     this.viewer.scene.screenSpaceCameraController.enableCollisionDetection = false;
-    
-    let imageryProvider = new Cesium.UrlTemplateImageryProvider({
-      url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
-      maximumLevel: 16,
-    })
-    this.viewer.imageryLayers.addImageryProvider(imageryProvider);
+    // 光照
+    this.viewer.scene.globe.enableLighting = false;
+    // 阴影
+    this.viewer.shadows= false
+
+    addBaseMap(this.viewer)
     this.mapLoaded.emit(this.viewer);
 
     

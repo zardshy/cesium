@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>扩散圆</title>
+</head>
+<body>
+   <div id="box" style="width:600px;height:600px;border:2px solid #000;background:#000;">
+       <script>
+        //获取div标签存储canvas
+        let canvasList = document.getElementById('box');
+        //创建canvas画布并设置属性
+        let canvas = document.createElement('canvas');
+        canvas.width = 600; 
+        canvas.height = 600; 
+        //将canvas添加到div列表中
+        canvasList.appendChild(canvas);
+       
+        let context=canvas.getContext("2d");
+        //解构赋值方法定义变量
+        let [width, height, radius] = [600, 600, 0]
+
+        class Circle {
+            //构造函数定义扩散圆圆心和半径
+            constructor(x, y, radius) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius
+            }
+            //画圆
+            drawCircle() {
+                context.beginPath();
+                context.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+                context.closePath();
+                context.lineWidth = 2; 
+                context.strokeStyle = 'rgba(250,250,50,1)'; 
+                context.stroke();
+            }
+            //圆的半径变化
+            getRadius() {
+              radius += 0.5;
+              if (this.radius > 40) {
+                  radius = 0
+              }
+            } 
+        }
+       
+       //实例化函数
+        function createCircles(){         
+            let expandCircle = new Circle(width/2, height/2, radius);
+            expandCircle.drawCircle();
+            expandCircle.getRadius();
+       };
+
+        // 创建临时canvas 
+        let backCanvas = document.createElement('canvas'),
+            backCtx = backCanvas.getContext('2d');
+            backCanvas.width = width;
+            backCanvas.height = height;        
+        //设置主canvas的绘制透明度
+            context.globalAlpha = 0.95;
+        //显示即将绘制的图像，忽略临时canvas中已存在的图像
+            backCtx.globalCompositeOperation = 'copy';
+        let render = function() {
+        //先将主canvas的图像缓存到临时canvas中
+            backCtx.drawImage(canvas, 0, 0, width, height);        
+        //清除主canvas上的图像
+            context.clearRect(0, 0, width, height);
+        //在主canvas上画新圆
+            createCircles();
+        //等新圆画完后，再把临时canvas的图像绘制回主canvas中
+            context.drawImage(backCanvas, 0, 0, width, height);
+       };
+       
+       //设置动画时间
+       setInterval("render()", 14);
+
+       </script>
+   </div> 
+</body>
+</html>

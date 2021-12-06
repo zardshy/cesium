@@ -12,7 +12,10 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CameraComponent } from './pages/camera/camera.component';
-import { TrackComponent } from './pages/track/track.component'
+import { TrackComponent } from './pages/track/track.component';
+import { BaseMapComponent } from './pages/base-map/base-map.component';
+import { CavasComponent } from './pages/cavas/cavas.component';
+import { ModelMaterialComponent } from './pages/model-material/model-material.component'
 @NgModule({
   imports: [WelcomeRoutingModule,
     NzLayoutModule,
@@ -20,7 +23,7 @@ import { TrackComponent } from './pages/track/track.component'
     FormsModule,
     NzButtonModule,
 ],
-  declarations: [WelcomeComponent, InitCesiumComponent, AddEntityComponent, AddGltfComponent, Tiles3dComponent, CameraComponent, TrackComponent],
+  declarations: [WelcomeComponent, InitCesiumComponent, AddEntityComponent, AddGltfComponent, Tiles3dComponent, CameraComponent, TrackComponent, BaseMapComponent, CavasComponent, ModelMaterialComponent],
   exports: [WelcomeComponent]
 })
 export class WelcomeModule { }

@@ -9,6 +9,7 @@
 import { Component, OnInit } from '@angular/core';
 declare var Cesium:any;
 import { createMarkerLayer } from '../../func/addMarker'
+import diffCircle from '../../func/cavas/diffCircle'
 
 @Component({
   selector: 'app-add-entity',
@@ -185,6 +186,32 @@ export class AddEntityComponent implements OnInit {
     //   glowPower : 0.9,
     //   color : Cesium.Color.RED
     // });
+  }
+
+  addPlane(){
+    let c = diffCircle()
+
+    const position = Cesium.Cartesian3.fromDegrees(121,31,100);
+    const canvas = document.createElement("canvas");
+    canvas.width = 500;
+    canvas.height = 150;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle="#000000";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    // 法线
+    const normal = Cesium.Cartesian3.UNIT_Y;
+    const board = this.viewer.entities.add({
+      position: position,
+      plane: {
+          plane:new Cesium.Plane(normal,0),
+          dimensions: new Cesium.Cartesian2(5, 1.5),
+          material: new Cesium.ImageMaterialProperty({
+              image: c,
+              transparent: true //透明贴图
+          })
+      }
+    });
+    this.viewer.zoomTo(board);
   }
 
   updatepolyLine(){

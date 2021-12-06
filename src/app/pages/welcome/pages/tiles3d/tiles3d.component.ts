@@ -112,6 +112,10 @@ export class Tiles3dComponent implements OnInit {
       // this.tileset.style = new Cesium.Cesium3DTileStyle({
       //   show : '${height} > 200'
       // });
+      // this.tileset.style = new Cesium.Cesium3DTileStyle({
+       //  color: "rgba(255, 255, 255, 0.5)",
+      //   show : true
+      // });
     }
 
 

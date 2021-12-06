@@ -15,6 +15,9 @@ import { AddGltfComponent } from './pages/add-gltf/add-gltf.component';
 import { Tiles3dComponent } from './pages/tiles3d/tiles3d.component';
 import { CameraComponent } from './pages/camera/camera.component' 
 import { TrackComponent } from './pages/track/track.component';
+import { BaseMapComponent } from './pages/base-map/base-map.component';
+import { CavasComponent } from './pages/cavas/cavas.component';
+import { ModelMaterialComponent } from './pages/model-material/model-material.component';
 
 const routes: Routes = [
   {
@@ -51,6 +54,24 @@ const routes: Routes = [
         path: 'Camera', component: CameraComponent,
         data: {
           breadcrumb: '相机'
+        },
+      },
+      {
+        path: 'baseMap', component: BaseMapComponent,
+        data: {
+          breadcrumb: '底图'
+        },
+      },
+      {
+        path: 'ModelMaterial', component: ModelMaterialComponent,
+        data: {
+          breadcrumb: '模型材质'
+        },
+      },
+      {
+        path: 'cavas', component: CavasComponent,
+        data: {
+          breadcrumb: 'cavas'
         },
       }
     ]
