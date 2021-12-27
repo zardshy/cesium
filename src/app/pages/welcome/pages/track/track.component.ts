@@ -36,7 +36,8 @@ export class TrackComponent implements OnInit {
     // 天文朱利安日期 与js Date() 相差8h，朱利安时间=UTC=GMT 北京时间=UTC+8=GMT+8
     let str = '2000-01-01 12:00:00'
     let julianDate = Cesium.JulianDate.fromDate(new Date(str),new Cesium.JulianDate())
-    let jsDate = new Date(julianDate.toString())
+    
+    
     let fmJulian = julianDate.toString().replace(/T/, ' ').replace(/Z/, '').replace(/\.\d+/g, '');
     console.log(julianDate);
 
