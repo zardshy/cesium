@@ -19,7 +19,25 @@ export class ModelMaterialComponent implements OnInit {
   }
 
   addModel(){
-    const position = Cesium.Cartesian3.fromDegrees(121.62898254394531, 31.02804946899414, 0)
+
+    var modelMatrix1 = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(102.73, 25.04,  16));
+    var model = this.viewer.scene.primitives.add(Cesium.Model.fromGltf({
+        url : 'assets/models/gltf/model1.gltf',
+              // url:'assets/models/gltf/board_t0_s2_3.gltf',
+        modelMatrix : modelMatrix1,
+        scale : 10.0,
+        minimumPixelSize: 256, 
+        maximumScreenSpaceError: 16 // default value
+
+
+      
+    }));
+    this.viewer.camera.flyTo({
+        destination : Cesium.Cartesian3.fromDegrees(102.73, 25.04, 2631.082799425431)
+    });
+
+  return
+    const position = Cesium.Cartesian3.fromDegrees(121.62898254394531, 31.02804946899414, 1000)
     // const modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(position)
     const _h= Cesium.Math.toRadians(150.0);
     const _p= Cesium.Math.toRadians(0.0);
@@ -29,9 +47,10 @@ export class ModelMaterialComponent implements OnInit {
     this.model = this.viewer.scene.primitives.add(
       Cesium.Model.fromGltf({  
       // url: 'assets/models/gltf/cdd.gltf',
-      url:'assets/models/gltf/board_t0_s2_3.gltf',
+      // url:'assets/models/gltf/board_t0_s2_3.gltf',
+      url:'assets/models/gltf/model.gltf',
       modelMatrix,
-      // minimumPixelSize: 128, 
+      minimumPixelSize: 256, 
       maximumScale: 20000,
       incrementallyLoadTextures : true
     })); 
