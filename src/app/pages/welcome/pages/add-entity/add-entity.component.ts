@@ -278,5 +278,41 @@ export class AddEntityComponent implements OnInit {
     handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK)
   }
 
+  drawLine(){
+    let pointArr = [];
+    let handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
+    handler.setInputAction((e)=>{
+
+      let ray = this.viewer.camera.getPickRay(e.position);
+      let position = this.viewer.scene.globe.pick(ray, this.viewer.scene);
+      let cartographic = Cesium.Cartographic.fromCartesian(position);
+      let lon = Cesium.Math.toDegrees(cartographic.longitude);
+      let lat = Cesium.Math.toDegrees(cartographic.latitude);
+      console.log(lon,lat)
+
+      let pointPrimitives = null;
+      pointPrimitives = this.viewer.scene.primitives.add(new Cesium.PointPrimitiveCollection());
+      pointPrimitives.add({
+        pixelSize: 10,
+        color: Cesium.Color.RED,
+        position: Cesium.Cartesian3.fromDegrees(lon, lat),
+      });
+ 
+      pointArr.push(lon)
+      pointArr.push(lat)
+      console.log(pointArr)
+      this.viewer.entities.add({
+        name: 'line',
+        polyline: {
+            positions: Cesium.Cartesian3.fromDegreesArray(pointArr),
+            width: 2,
+            material: Cesium.Color.YELLOW,
+            clampToGround: true
+        }
+      })
+
+    },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+  }
+
 
 }
