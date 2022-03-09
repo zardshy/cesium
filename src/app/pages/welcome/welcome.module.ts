@@ -15,7 +15,8 @@ import { CameraComponent } from './pages/camera/camera.component';
 import { TrackComponent } from './pages/track/track.component';
 import { BaseMapComponent } from './pages/base-map/base-map.component';
 import { CavasComponent } from './pages/cavas/cavas.component';
-import { ModelMaterialComponent } from './pages/model-material/model-material.component'
+import { ModelMaterialComponent } from './pages/model-material/model-material.component';
+import { DemoComponent } from './pages/demo/demo.component'
 @NgModule({
   imports: [WelcomeRoutingModule,
     NzLayoutModule,
@@ -23,7 +24,7 @@ import { ModelMaterialComponent } from './pages/model-material/model-material.co
     FormsModule,
     NzButtonModule,
 ],
-  declarations: [WelcomeComponent, InitCesiumComponent, AddEntityComponent, AddGltfComponent, Tiles3dComponent, CameraComponent, TrackComponent, BaseMapComponent, CavasComponent, ModelMaterialComponent],
+  declarations: [WelcomeComponent, InitCesiumComponent, AddEntityComponent, AddGltfComponent, Tiles3dComponent, CameraComponent, TrackComponent, BaseMapComponent, CavasComponent, ModelMaterialComponent, DemoComponent],
   exports: [WelcomeComponent]
 })
 export class WelcomeModule { }

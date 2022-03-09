@@ -152,7 +152,6 @@ export class TrackComponent implements OnInit {
     }
 
   createObj1(){
-    this.scanLine()
     this.julianDateFunc()
     const model = this.viewer.entities.add({
       id:'zardcar',

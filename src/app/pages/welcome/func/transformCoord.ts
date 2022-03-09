@@ -14,12 +14,16 @@ export default class TfCoords{
     // 世界坐标转换为经纬度
     static xyzTolnglat(x,y,z){
         const ellipsoid = Cesium.Ellipsoid.WGS84
-        const cartesian3= new Cesium.Cartesian3(x,y,z);
-        const cartographic= ellipsoid.cartesianToCartographic(cartesian3);
-        const lat=Cesium.Math.toDegrees(cartographic.latitude);
-        const lng=Cesium.Math.toDegrees(cartographic.longitude);
-        const alt=cartographic.height;
+        const cartesian3 = new Cesium.Cartesian3(x,y,z);
+        const cartographic = ellipsoid.cartesianToCartographic(cartesian3);
+        const lat = Cesium.Math.toDegrees(cartographic.latitude);
+        const lng = Cesium.Math.toDegrees(cartographic.longitude);
+        const alt = cartographic.height;
         return { lng,lat,alt }
+    }
+    // 世界坐标转屏幕坐标
+    static xyzToScreen(viewer,cartesian3){
+        return Cesium.SceneTransforms.wgs84ToWindowCoordinates(viewer.scene,cartesian3)
     }
     // 经、纬度转弧度
     static degTorad(degrees){
@@ -30,13 +34,10 @@ export default class TfCoords{
         return Cesium.Math.toDegrees(radians)
     }
 }
-// 世界坐标转屏幕坐标
-function xyzToScreen(cartesian3){
-    return Cesium.SceneTransforms.wgs84ToWindowCoordinates(cartesian3)
-}
 
 
-// var a = tfCoord.lnglatToxyz(121.1,31.1,10)
+
+// var a = TfCoords.lnglatToxyz(121.1,31.1,10)
 // console.log(a)
 
 // var b = tfCoord.xyzTolnglat(a.x,a.y,a.z);

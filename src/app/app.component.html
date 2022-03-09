@@ -1,4 +1,4 @@
-<nz-layout class="app-layout">
+<!-- <nz-layout class="app-layout">
   <nz-sider class="menu-sidebar"
             nzCollapsible
             nzWidth="256px"
@@ -53,11 +53,10 @@
     <nz-header>
       <div class="app-header">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-            <!-- <i class="trigger"
+            <i class="trigger"
                nz-icon
                [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-            ></i> -->
-            <i nz-icon nzType="caret-down" nzTheme="outline"></i>
+            ></i>
         </span>
       </div>
     </nz-header>
@@ -67,4 +66,10 @@
       </div>
     </nz-content>
   </nz-layout>
-</nz-layout>
+</nz-layout> -->
+
+
+<div style="width: 100%;height: 100%;">
+  <router-outlet></router-outlet>
+</div>
+

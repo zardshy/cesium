@@ -8,8 +8,8 @@ export class TrackAnimation{
     public stopTime;
     public entityRunTime;
     public multiplier = 0.5;
-    public ifPathLine = true;
-    public ifPathPoint = true;
+    public ifPathLine = false;
+    public ifPathPoint = false;
     constructor(options){
         const { viewer,pathArr,entity,runTime,ifPathLine,ifPathPoint } = options;
         this.viewer = viewer;

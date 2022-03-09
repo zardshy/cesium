@@ -18,13 +18,14 @@ import { TrackComponent } from './pages/track/track.component';
 import { BaseMapComponent } from './pages/base-map/base-map.component';
 import { CavasComponent } from './pages/cavas/cavas.component';
 import { ModelMaterialComponent } from './pages/model-material/model-material.component';
+import { DemoComponent } from './pages/demo/demo.component';
 
 const routes: Routes = [
   {
     path: '',
     component: WelcomeComponent,
     children:[{
-        path: '', redirectTo: 'AddEntity',
+        path: '', redirectTo: 'demo',
       },
       {
         path: 'AddEntity', component: AddEntityComponent,
@@ -72,6 +73,12 @@ const routes: Routes = [
         path: 'cavas', component: CavasComponent,
         data: {
           breadcrumb: 'cavas'
+        },
+      },
+      {
+        path: 'demo', component: DemoComponent,
+        data: {
+          breadcrumb: 'demo'
         },
       }
     ]

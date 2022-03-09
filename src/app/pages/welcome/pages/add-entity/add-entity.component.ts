@@ -10,6 +10,8 @@ import { Component, OnInit } from '@angular/core';
 declare var Cesium:any;
 import { createMarkerLayer } from '../../func/addMarker'
 import diffCircle from '../../func/cavas/diffCircle'
+import TfCoords from '../../func/transformCoord'
+import Water from '../../func/texiao/Water'
 
 @Component({
   selector: 'app-add-entity',
@@ -26,6 +28,12 @@ export class AddEntityComponent implements OnInit {
 
   mapLoaded(e){
     this.viewer = e;
+
+    var cartesian3 = TfCoords.lnglatToxyz(121.1,31.1,10)
+    console.log(cartesian3)
+    var screenCoord = Cesium.SceneTransforms.wgs84ToWindowCoordinates(this.viewer.scene,cartesian3)
+    console.log(screenCoord)
+
     // 拾取实体
     // const handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
     // handler.setInputAction((movement)=>{
@@ -173,12 +181,12 @@ export class AddEntityComponent implements OnInit {
     this.polyLine = this.viewer.entities.add({
       polyline : {
           positions : Cesium.Cartesian3.fromDegreesArray([121.1,31.1,122,32]),
-          width : 5,
+          width : 15,
           // material : Cesium.Color.RED,
 
-          color : Cesium.Color.RED,
-          outlineWidth : 3,
-          outlineColor : Cesium.Color.BLACK
+          // color : Cesium.Color.RED,
+          // outlineWidth : 3,
+          // outlineColor : Cesium.Color.BLACK
     }});
     this.viewer.zoomTo(this.viewer.entities);
     // 发光
@@ -216,13 +224,87 @@ export class AddEntityComponent implements OnInit {
 
   updatepolyLine(){
     this.polyLine.polyline.material = new Cesium.PolylineGlowMaterialProperty({
-      glowPower : 0.2,
+      glowPower : 0.3,
       color : Cesium.Color.YELLOW,
-      taperPower: 0.1
+      // color : Cesium.Color.YELLOW.withAlpha(100),
+      // taperPower: 0.1
     });
   }
 
   addPoint(){
+    Water(this.viewer,
+      [
+        121.93770628339514 ,
+        30.90989525340411 ,
+        0,
+        121.94179304137732,
+         30.909861693589566,
+         0,
+         121.94591833644154,
+         30.90885409927493,
+         0,
+         121.94903081429607,
+         30.907175070796296,
+         0,
+         121.95144180168687,
+         30.90502646120125,
+         0,
+         121.95322902361073,
+         30.902274455081354,
+         0,
+         121.95447033047725,
+         30.898752043613865,
+         0,
+         121.95454497797425,
+         30.895633591542385,
+         0,
+         121.95341472305923,
+         30.892650524496407,
+         0,
+         121.95143000951653,
+         30.889769143047925,
+         0,
+         121.94890259964873,
+         30.88765908612741,
+         0,
+         121.94524935785677,
+         30.885783931027714,
+         0,
+         121.94058704020226,
+         30.88521479153862,
+         0,
+         121.93639094306872,
+         30.885716934595568,
+         0,
+         121.93219395692941,
+         30.88712314673071,
+         0,
+         121.9289275019642,
+         30.890003512749026,
+         0,
+         121.92670846518199,
+         30.893588747457514,
+         0,
+         121.92584812345648,
+         30.8982152905379,
+         0,
+         121.92701090380825,
+         30.902039452712483,
+         0,
+         121.92883613978637,
+         30.905429153718934,
+         0,
+         121.93218071226671,
+         30.90798085793282,
+         0,
+         121.93556566796289,
+         30.90986161530055,
+         0,
+         121.93743383238098,
+         30.910130366791957,
+         0
+      ])
+    return
     let dataArr = [
       { lng:121.1,lat:31.1,alt:10,name:'zard1' },
       { lng:121.13,lat:31.13,alt:0,name:'zard2' }
@@ -288,7 +370,9 @@ export class AddEntityComponent implements OnInit {
       let cartographic = Cesium.Cartographic.fromCartesian(position);
       let lon = Cesium.Math.toDegrees(cartographic.longitude);
       let lat = Cesium.Math.toDegrees(cartographic.latitude);
-      console.log(lon,lat)
+      console.log(lon)
+      console.log(lat)
+      console.log(0)
 
       let pointPrimitives = null;
       pointPrimitives = this.viewer.scene.primitives.add(new Cesium.PointPrimitiveCollection());
@@ -300,7 +384,7 @@ export class AddEntityComponent implements OnInit {
  
       pointArr.push(lon)
       pointArr.push(lat)
-      console.log(pointArr)
+
       this.viewer.entities.add({
         name: 'line',
         polyline: {
@@ -309,7 +393,7 @@ export class AddEntityComponent implements OnInit {
             material: Cesium.Color.YELLOW,
             clampToGround: true
         }
-      })
+      });
 
     },Cesium.ScreenSpaceEventType.LEFT_CLICK)
   }

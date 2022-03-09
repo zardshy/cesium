@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { numberCity } from '../../func/numberCity'
 declare var Cesium:any;
+import GroundScanLine from '../../func/texiao/GroundScanLine'
 
 @Component({
   selector: 'app-tiles3d',
@@ -34,6 +35,10 @@ export class Tiles3dComponent implements OnInit {
     }
 
     add3dTiles(){
+      var CartographicCenter = new Cesium.Cartographic(Cesium.Math.toRadians(121.8252503), Cesium.Math.toRadians(30.9215641), 1000);
+      var scanColor = new Cesium.Color(1.0, 1.0, 0.0, 1);
+      GroundScanLine(this.viewer, CartographicCenter, 11500, scanColor, 10000);
+
       var longitude = 121.8252503;
       var latitude = 30.9215641;
       var height = -50;
