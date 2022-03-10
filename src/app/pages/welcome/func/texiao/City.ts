@@ -62,13 +62,13 @@ export function numberCity(viewer, tileset) {
                 void main(void){
                     /* 渐变效果 */
                     vec4 v_helsing_position = czm_inverseModelView * vec4(${vPosition},1);// 解算出模型坐标
-                    float stc_pl = fract(czm_frameNumber / 320.0) * 3.14159265 * 2.0;
-                    float stc_sd = v_helsing_position.z / 140.0 + sin(stc_pl) * 0.1;
+                    float stc_pl = fract(czm_frameNumber / 150.0) * 3.14159265 * 2.0;
+                    float stc_sd = v_helsing_position.z / 100.0 + sin(stc_pl) * 0.1;
                     gl_FragColor = ${color};// 基础颜色
                     gl_FragColor *= vec4(stc_sd, stc_sd, stc_sd, 100.0);// 按模型高度进行颜色变暗处理
                     /* 扫描线 */
-                    float glowRange = 350.0; // 光环的移动范围(高度)，最高到360米
-                    float stc_a13 = fract(czm_frameNumber / 360.0);// 计算当前着色器的时间，帧率/（6*60），即时间放慢6倍
+                    float glowRange = 150.0; // 光环的移动范围(高度)，最高到360米
+                    float stc_a13 = fract(czm_frameNumber / 200.0);// 计算当前着色器的时间，帧率/（6*60），即时间放慢6倍
                     float stc_h = clamp(v_helsing_position.z / glowRange, 0.0, 1.0);
                     stc_a13 = abs(stc_a13 - 0.5) * 2.0;
                     float stc_diff = step(0.005, abs(stc_h - stc_a13));// 根据时间来计算颜色差异

@@ -16,7 +16,7 @@ export class PolylineTrailLinkMaterialProperty {
     }
     init(){
         Cesium.Material.PolylineTrailLinkType = 'PolylineTrailLink';
-        // Cesium.Material.PolylineTrailLinkImage = 'assets/materia/jiantou3.png'
+        // Cesium.Material.PolylineTrailLinkImage = 'assets/materia/linecyan.png'
         Cesium.Material.PolylineTrailLinkImage = 'assets/materia/polylineLineFlowMaterial.png'
         // // 不显示轨迹线(传入颜色)
         // Cesium.Material.PolylineTrailLinkSource =

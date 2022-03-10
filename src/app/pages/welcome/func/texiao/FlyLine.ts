@@ -3,7 +3,7 @@ declare var Cesium:any;
 export default function flyLine(viewer,p1,p2,h,t){
     const PolylineGeometry = new Cesium.PolylineGeometry({
         positions: computeFlyline(p1,p2,h),
-        width: 5,
+        width: 2,
       })
       const instance = new Cesium.GeometryInstance({
         geometry: PolylineGeometry,
