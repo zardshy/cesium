@@ -4,19 +4,19 @@ export default function flyLine(viewer,p1,p2,h,t){
     const PolylineGeometry = new Cesium.PolylineGeometry({
         positions: computeFlyline(p1,p2,h),
         width: 2,
-      })
-      const instance = new Cesium.GeometryInstance({
+    })
+    const instance = new Cesium.GeometryInstance({
         geometry: PolylineGeometry,
         id: 'flyline',
-      })
-      let en = viewer.scene.primitives.add(
-          new Cesium.Primitive({
-              geometryInstances: [instance],
-              appearance: getFlylineMaterial(t),
-              releaseGeometryInstances: false,
-              compressVertices: false,
-          })
-      )
+    })
+    let en = viewer.scene.primitives.add(
+        new Cesium.Primitive({
+            geometryInstances: [instance],
+            appearance: getFlylineMaterial(t),
+            releaseGeometryInstances: false,
+            compressVertices: false,
+        })
+    )
 }
 
 function computeFlyline(p1,p2,h){
@@ -107,27 +107,27 @@ function getFlylineMaterial(type){
     switch (type) {
         case 1:
             fragmentShaderSource = `         
-            varying vec2 v_st;    
-            varying float v_width;    
-            varying float v_polylineAngle;
-            varying vec4 v_positionEC;
-            varying vec3 v_normalEC;
-            void main()
-            {
-                vec2 st = v_st;
+                varying vec2 v_st;    
+                varying float v_width;    
+                varying float v_polylineAngle;
+                varying vec4 v_positionEC;
+                varying vec3 v_normalEC;
+                void main()
+                {
+                    vec2 st = v_st;
 
-                float num = 4.0;
-                float xx = fract(st.s*num - czm_frameNumber/60.0);
-                float r = xx;
-                float g = 0.0;
-                float b = 0.0;
-                float a = xx;
-                if(fract(st.s*num/4.0 - czm_frameNumber/240.0)<0.75){
-                    a=0.0;
-                }
+                    float num = 4.0;
+                    float xx = fract(st.s*num - czm_frameNumber/60.0);
+                    float r = xx;
+                    float g = 0.0;
+                    float b = 0.0;
+                    float a = xx;
+                    if(fract(st.s*num/4.0 - czm_frameNumber/240.0)<0.75){
+                        a=0.0;
+                    }
 
-                gl_FragColor = vec4(r,g,b,a);
-            }`
+                    gl_FragColor = vec4(r,g,b,a);
+                }`
             break;
         case 2:
             fragmentShaderSource = `         
@@ -152,27 +152,6 @@ function getFlylineMaterial(type){
         break;
         case 3:
             fragmentShaderSource = `         
-            varying vec2 v_st;    
-            varying float v_width;    
-            varying float v_polylineAngle;
-            varying vec4 v_positionEC;
-            varying vec3 v_normalEC;
-            void main()
-            {
-                vec2 st = v_st;
-                
-                //卡巴斯基
-                float xx = sin(st.s*6.0 -czm_frameNumber/5.0) - cos(st.t*6.0);
-                float r = 0.0;
-                float g = xx;
-                float b = xx;
-                float a = xx;
-
-                gl_FragColor = vec4(r,g,b,a);
-            }`
-            break;
-            case 4:
-                fragmentShaderSource = `         
                 varying vec2 v_st;    
                 varying float v_width;    
                 varying float v_polylineAngle;
@@ -181,25 +160,46 @@ function getFlylineMaterial(type){
                 void main()
                 {
                     vec2 st = v_st;
-                    // 箭头飞线，宽度 8
-                    float xx = fract(st.s*10.0 + st.t  - czm_frameNumber/60.0);
-                    if (st.t<0.5) {
-                        xx = fract(st.s*10.0 - st.t - czm_frameNumber/60.0);
-                    }
+                    
+                    //卡巴斯基
+                    float xx = sin(st.s*6.0 -czm_frameNumber/5.0) - cos(st.t*6.0);
                     float r = 0.0;
                     float g = xx;
                     float b = xx;
                     float a = xx;
 
-                    // 飞线边框
-                    if (st.t>0.8||st.t<0.2) {
-                        g = 1.0;
-                        b = 1.0;
-                        a = 0.4;
-                    }
-
                     gl_FragColor = vec4(r,g,b,a);
                 }`
+            break;
+            case 4:
+                fragmentShaderSource = `         
+                    varying vec2 v_st;    
+                    varying float v_width;    
+                    varying float v_polylineAngle;
+                    varying vec4 v_positionEC;
+                    varying vec3 v_normalEC;
+                    void main()
+                    {
+                        vec2 st = v_st;
+                        // 箭头飞线，宽度 8
+                        float xx = fract(st.s*10.0 + st.t  - czm_frameNumber/60.0);
+                        if (st.t<0.5) {
+                            xx = fract(st.s*10.0 - st.t - czm_frameNumber/60.0);
+                        }
+                        float r = 0.0;
+                        float g = xx;
+                        float b = xx;
+                        float a = xx;
+
+                        // 飞线边框
+                        if (st.t>0.8||st.t<0.2) {
+                            g = 1.0;
+                            b = 1.0;
+                            a = 0.4;
+                        }
+
+                        gl_FragColor = vec4(r,g,b,a);
+                    }`
                 break;
         default:
             break;

@@ -14,13 +14,22 @@ import { zh_CN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { LoginComponent } from './components/login/login.component';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzCardModule } from 'ng-zorro-antd/card';
+
 registerLocaleData(zh);
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent
   ],
   imports: [
+    NzFormModule ,
     BrowserModule,
     AppRoutingModule,
     IconsProviderModule,
@@ -29,6 +38,11 @@ registerLocaleData(zh);
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    NzButtonModule,
+    NzFormModule,
+    NzGridModule,
+    NzInputModule,
+    NzCardModule
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN },
     { provide: LocationStrategy, useClass: HashLocationStrategy }],

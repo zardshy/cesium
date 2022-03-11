@@ -1,0 +1,47 @@
+<div class="login-Page">
+    <div class="login-bg">
+      
+      <div class="logo-Box">
+        <img src="./assets/IMG/logo.png"/>
+        <b>规途工况</b>
+      </div>
+  
+      <div class="title-Box">
+        <p class="title-top">规途工况管理系统</p>
+        <p class="title-bottom">Scheduled working condition management system</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="login-box">
+    <nz-card nzHoverable  nzTitle="Welcome to" style="width:350px">
+      <form nz-form [formGroup]="validateForm" class="login-form">
+          <nz-form-item>
+            <nz-form-control nzErrorTip="请输入用户名!">
+              <nz-input-group nzPrefixIcon="user">
+                <input type="text" nz-input formControlName="userName" placeholder="请输入用户名" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control nzErrorTip="请输入密码!">
+              <nz-input-group nzPrefixIcon="lock">
+                <input type="password" nz-input formControlName="password" placeholder="请输入密码" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+          <div nz-row class="login-form-margin">
+            <div nz-col [nzSpan]="12">
+              <label nz-checkbox formControlName="remember">
+                <span>记住我</span>
+              </label>
+            </div>
+            <div nz-col [nzSpan]="12">
+              <a class="login-form-forgot">忘记密码?</a>
+            </div>
+            
+          </div>
+          <button (click)="jump()" nz-button class="login-form-button login-form-margin" [nzType]="'primary'">登录</button>
+        </form>
+    </nz-card> 
+  </div>

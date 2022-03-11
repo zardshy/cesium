@@ -1,0 +1,81 @@
+
+.login-Page{
+    position: relative;
+    width: 100vw;
+      height: 100vh;
+      margin: 0;
+      /* background: url(../../../assets/IMG/aa.jfif) no-repeat center center; */
+      background-size: 100% 100%;
+    z-index: -1;
+  }
+
+      .logo-Box{
+      position: absolute;
+      top: 1.5vh;
+      left: 2vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2vh;
+      font-weight: bold;
+      font-style: italic;
+      letter-spacing: 0.3vh;
+      text-indent: 0.8vh;
+      color: #fff;
+
+    }
+        img{
+        filter: brightness(4);
+      }
+
+
+    .title-Box{
+      position: absolute;
+      left: 292px;
+      top: 280px;
+      color: #fff;
+    }
+         .title-top{
+        font-size: 2.3rem;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        text-shadow:  5px 5px 5px #474646;
+        margin-bottom: 10px;
+      }
+          .title-bottom{
+        font-size: 1.3rem;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        text-shadow:  5px 5px 5px #474646;
+      }
+
+
+
+
+
+
+
+
+  .login-box{
+    position: absolute;
+    right: 15rem;
+    top: 18rem;
+    box-shadow: 2px 2px 10px #272727;
+    z-index: 9999;
+  }
+  
+  .login-form {
+      max-width: 300px;
+  }
+  
+  .login-form-margin {
+    margin-bottom: 16px;
+  }
+  
+  .login-form-forgot {
+    float: right;
+  }
+  
+  .login-form-button {
+    width: 100%;
+  }
